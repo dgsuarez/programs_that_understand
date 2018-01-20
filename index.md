@@ -23,3 +23,5 @@ and check out the docs for [crystal
 macros](https://crystal-lang.org/docs/syntax_and_semantics/macros.html). You
 can also check the actual source for the examples in the [github
 repo](https://github.com/dgsuarez/programs_that_understand) for this site.
+
+Built by [@dgsuarez](https://twitter.com/dg_suarez).
