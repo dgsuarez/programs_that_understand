@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>validation.rb</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" media="all" href="../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="../crystal/db_adapters.html">
+                db_adapters.cr
+              </a>
+            
+              
+              <a class="source" href="../crystal/state_machine.html">
+                state_machine.cr
+              </a>
+            
+              
+              <a class="source" href="../crystal/value_object.html">
+                value_object.cr
+              </a>
+            
+              
+              <a class="source" href="../crystal/visitor.html">
+                visitor.cr
+              </a>
+            
+              
+              <a class="source" href="db_adapters.html">
+                db_adapters.rb
+              </a>
+            
+              
+              <a class="source" href="log_decorator.html">
+                log_decorator.rb
+              </a>
+            
+              
+              <a class="source" href="validation.html">
+                validation.rb
+              </a>
+            
+              
+              <a class="source" href="value_object.html">
+                value_object.rb
+              </a>
+            
+              
+              <a class="source" href="visitor.html">
+                visitor.rb
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>validation.rb</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This is a simple validation engine. With a small amount of code, and using
+very few metaprogramming tricks, it is concise, extensible and unsurprising
+in it’s behavior.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Here are the instance methods for our validable object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">Validable</span></span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">valid?</span></span>
+    failed_validations.empty?
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">validation_errors</span></span>
+    failed_validations.map(&amp;<span class="hljs-symbol">:error_message</span>)
+  <span class="hljs-keyword">end</span>
+
+  private</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>In order to see if any validation is failed, we get the validations from
+the class, for each we retrieve the field it’s validating against, and we use
+send to retrieve it’s value in order for the validation to check.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">failed_validations</span></span>
+    <span class="hljs-keyword">self</span>.<span class="hljs-keyword">class</span>.validations.reject <span class="hljs-keyword">do</span> <span class="hljs-params">|validation|</span>
+      field_value = send(validation.field_name)
+      validation.valid?(field_value)
+    <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">end</span>
+
+<span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>These are the class methods for the validables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">Validations</span></span>
+
+  <span class="hljs-keyword">attr_reader</span> <span class="hljs-symbol">:validations</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">validates_format</span><span class="hljs-params">(field_name, format)</span></span>
+    validation = FormatValidation.new(field_name, format)
+    add_validation(validation)
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">validates_type</span><span class="hljs-params">(field_name, type)</span></span>
+    validation = TypeValidation.new(field_name, type)
+    add_validation(validation)
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_validation</span><span class="hljs-params">(validation)</span></span>
+    @validations <span class="hljs-params">||</span>= []
+
+    @validations &lt;&lt; validation
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FormatValidation</span></span>
+
+  <span class="hljs-keyword">attr_reader</span> <span class="hljs-symbol">:field_name</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span><span class="hljs-params">(field_name, regex)</span></span>
+    @field_name = field_name
+    @regex = regex
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">valid?</span><span class="hljs-params">(field_value)</span></span>
+    @regex =~ field_value
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">error_message</span></span>
+    <span class="hljs-string">"<span class="hljs-subst">#{field_name}</span> doesn't match <span class="hljs-subst">#{@regex}</span>"</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeValidation</span></span>
+
+  <span class="hljs-keyword">attr_reader</span> <span class="hljs-symbol">:field_name</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span><span class="hljs-params">(field_name, type)</span></span>
+    @field_name = field_name
+    @type = type
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">valid?</span><span class="hljs-params">(field_value)</span></span>
+    field_value.is_a?(@type)
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">error_message</span></span>
+    <span class="hljs-string">"<span class="hljs-subst">#{field_name}</span> is not a <span class="hljs-subst">#{@type}</span>"</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MaxValidation</span></span>
+
+  <span class="hljs-keyword">attr_reader</span> <span class="hljs-symbol">:field_name</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span><span class="hljs-params">(field_name, max_value)</span></span>
+    @field_name = field_name
+    @max_value = max_value
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">valid?</span><span class="hljs-params">(field_value)</span></span>
+    field_value &lt;= @max_value
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">error_message</span></span>
+    <span class="hljs-string">"<span class="hljs-subst">#{field_name}</span> is bigger than <span class="hljs-subst">#{@max_value}</span>"</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>
+  <span class="hljs-keyword">include</span> Validable
+  extend Validations
+
+  validates_type <span class="hljs-symbol">:name</span>, String
+  validates_type <span class="hljs-symbol">:phone</span>, String
+  validates_type <span class="hljs-symbol">:age</span>, Integer
+
+  validates_format <span class="hljs-symbol">:name</span>, <span class="hljs-regexp">/^[A-Z]/</span>
+  validates_format <span class="hljs-symbol">:phone</span>, <span class="hljs-regexp">/\d{3}-\d{3}-\d{3}/</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>We can have ad-hoc validations even if we don’t have the nice
+<code>validates_...</code> syntax for them</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  add_validation MaxValidation.new(<span class="hljs-symbol">:age</span>, <span class="hljs-number">140</span>)
+
+  <span class="hljs-keyword">attr_reader</span> <span class="hljs-symbol">:name</span>, <span class="hljs-symbol">:phone</span>, <span class="hljs-symbol">:age</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span><span class="hljs-params">(name, phone, age)</span></span>
+    @name = name
+    @phone = phone
+    @age = age
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+p Person.new(<span class="hljs-string">"Diego"</span>, <span class="hljs-string">"111-212-213"</span>, <span class="hljs-number">89</span>).valid? <span class="hljs-comment"># true</span>
+p Person.new(<span class="hljs-string">"diego"</span>, <span class="hljs-string">"not a number"</span>, <span class="hljs-number">150</span>).valid? <span class="hljs-comment"># false</span></pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
