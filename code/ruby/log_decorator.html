@@ -83,8 +83,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>Using method_missing allows us to intercept any method call. Here we use that
-to decorate every method call to a given object.</p>
+              <p>Using <code>method_missing</code> allows us to intercept any method call. Here we use
+that to decorate every method call to a given object.</p>
 
             </div>
             
@@ -113,10 +113,10 @@ str = LogDecorator.new(<span class="hljs-string">"Hey ho let's go"</span>)</pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>This will print:
-~~&gt; Hey ho let’s go received length with ([])
-15</p>
-
+              <p>This will print:</p>
+<pre><code>~~&gt; Hey ho let<span class="hljs-string">'s go received length with ([])
+15</span>
+</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>puts str.length</pre></div></div>

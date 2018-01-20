@@ -102,7 +102,8 @@ in it’s behavior.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">Validable</span></span>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">Validable</span></span>
 
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">valid?</span></span>
     failed_validations.empty?
@@ -123,9 +124,10 @@ in it’s behavior.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>In order to see if any validation is failed, we get the validations from
-the class, for each we retrieve the field it’s validating against, and we use
-send to retrieve it’s value in order for the validation to check.</p>
+              <p>Here is where all the magic happens. In order to see if any validation is
+failed, we get the validations from the class, for each we retrieve the
+field it’s validating against, and we use send to retrieve it’s value in
+order for the validation to check.</p>
 
             </div>
             
@@ -148,11 +150,14 @@ send to retrieve it’s value in order for the validation to check.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>These are the class methods for the validables</p>
+              <p>These are the class methods for the validables,
+we simply keep track of the validations for the class
+and add a couple of “pretty” methods to add them</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">Validations</span></span>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">Validations</span></span>
 
   <span class="hljs-keyword">attr_reader</span> <span class="hljs-symbol">:validations</span>
 
@@ -171,8 +176,23 @@ send to retrieve it’s value in order for the validation to check.</p>
 
     @validations &lt;&lt; validation
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>These are the validations, note that they are just
+plain ruby objects</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FormatValidation</span></span>
 
   <span class="hljs-keyword">attr_reader</span> <span class="hljs-symbol">:field_name</span>
@@ -225,9 +245,22 @@ send to retrieve it’s value in order for the validation to check.</p>
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">error_message</span></span>
     <span class="hljs-string">"<span class="hljs-subst">#{field_name}</span> is bigger than <span class="hljs-subst">#{@max_value}</span>"</span>
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>And here is all together.</p>
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>
   <span class="hljs-keyword">include</span> Validable
   extend Validations
 
@@ -241,11 +274,11 @@ send to retrieve it’s value in order for the validation to check.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>We can have ad-hoc validations even if we don’t have the nice
 <code>validates_...</code> syntax for them</p>
