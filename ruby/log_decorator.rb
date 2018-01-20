@@ -1,5 +1,5 @@
-# Using method_missing allows us to intercept any method call. Here we use that
-# to decorate every method call to a given object.
+# Using `method_missing` allows us to intercept any method call. Here we use
+# that to decorate every method call to a given object.
 
 class LogDecorator
 
@@ -17,6 +17,8 @@ end
 str = LogDecorator.new("Hey ho let's go")
 
 # This will print:
+# ```
 # ~~> Hey ho let's go received length with ([])
 # 15
+# ```
 puts str.length

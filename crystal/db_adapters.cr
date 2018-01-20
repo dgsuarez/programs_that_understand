@@ -10,7 +10,7 @@ end
 
 
 # This macro expands to a case statement with branches like
-#    when "MysqlAdapter" then Adapters::MysqlAdapter
+#    `when "MysqlAdapter" then Adapters::MysqlAdapter`
 
 macro class_from_name(container_namespace, class_name)
   case {{class_name}}

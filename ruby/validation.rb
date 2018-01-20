@@ -3,6 +3,7 @@
 # in it's behavior.
 
 # Here are the instance methods for our validable object
+
 module Validable
 
   def valid?
@@ -15,9 +16,10 @@ module Validable
 
   private
 
-  # In order to see if any validation is failed, we get the validations from
-  # the class, for each we retrieve the field it's validating against, and we use
-  # send to retrieve it's value in order for the validation to check.
+  # Here is where all the magic happens. In order to see if any validation is
+  # failed, we get the validations from the class, for each we retrieve the
+  # field it's validating against, and we use send to retrieve it's value in
+  # order for the validation to check.
 
   def failed_validations
     self.class.validations.reject do |validation|
@@ -28,7 +30,10 @@ module Validable
 
 end
 
-# These are the class methods for the validables
+# These are the class methods for the validables,
+# we simply keep track of the validations for the class
+# and add a couple of "pretty" methods to add them
+
 module Validations
 
   attr_reader :validations
@@ -49,6 +54,9 @@ module Validations
     @validations << validation
   end
 end
+
+# These are the validations, note that they are just
+# plain ruby objects
 
 class FormatValidation
 
@@ -104,6 +112,7 @@ class MaxValidation
   end
 end
 
+# And here is all together.
 class Person
   include Validable
   extend Validations

@@ -85,13 +85,15 @@
               </div>
               <p>In ruby there’s no method overloading. This is a problem when implementing
 something like the Visitor pattern. One way to go around this is this one,
-Instead of having visit(String s), we have visit_string(s).</p>
+Instead of having <code>visit(String s)</code>, we have <code>visit_string(s)</code>.</p>
 <p>When an object accepts the visitor, it uses it’s own class name to generate
 the method it needs to call.</p>
 <p>One big advantage of doing it like this, besides general DRYness, is that by
-generating the method name dynamically, we can even distribute the Visitable
-module, or reuse it wherever. If we had done some sort of non-dynamic case,
-we’d have tied Visitable to a single use case.</p>
+generating the method name dynamically, we can even distribute the
+<code>Visitable</code> module and reuse it wherever. If we had done some sort of
+non-dynamic case statement to dispatch, we’d have tied <code>Visitable</code> to a single
+use case (for every new place we’d want to add it, we’d need to update this
+case).</p>
 
             </div>
             
@@ -103,8 +105,7 @@ we’d have tied Visitable to a single use case.</p>
   <span class="hljs-keyword">end</span>
 <span class="hljs-keyword">end</span>
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">String</span>;</span> <span class="hljs-keyword">include</span> Visitable; <span class="hljs-keyword">end</span>
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Fixnum</span>;</span> <span class="hljs-keyword">include</span> Visitable; <span class="hljs-keyword">end</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Object</span>;</span> <span class="hljs-keyword">include</span> Visitable; <span class="hljs-keyword">end</span>
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Array</span></span>
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">accept</span><span class="hljs-params">(visitor)</span></span>

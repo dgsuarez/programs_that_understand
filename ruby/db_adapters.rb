@@ -11,8 +11,8 @@ module Adapters
   class OracleAdapter; end
 end
 
-# Using const_get we can resolve a class name (a string), into a real reference
-# to the class.
+# Using `const_get` we can resolve a class name (a string), into a real
+# reference to the class.
 
 def adapter(db_name)
   adapter_class_name = "#{db_name.capitalize}Adapter"

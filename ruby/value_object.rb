@@ -2,7 +2,7 @@
 # creates new classes for the given attribute names.
 
 # This method will be invoked for a class object. For example, let's say a
-# Money class. It'll add an initialize for the class with the given arguments
+# Money class. It'll add an `initialize` for the class with the given arguments
 # as parameters, and it'll set the instance variable with the same name for
 # each attribute.
 
@@ -25,9 +25,9 @@ def vo_readers(attributes)
   end
 end
 
-# Finally we have the factory, this returns a new instance of Class (so, a
-# class!).  When we pass a block to Class.new, it gets executed in the context
-# of the newly created class
+# Finally we have the factory, this returns a new instance of `Class` (so, a
+# class!).  When we pass a block to `Class.new`, it gets executed in the
+# context of the newly created class
 
 def value_object(*attributes)
   Class.new do
