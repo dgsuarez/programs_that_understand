@@ -44,5 +44,4 @@ end
 
 visitor = PrintVisitor.new
 
-puts ["asf", 1, 2, "jl"].accept(visitor)
-# <[=asf=, !!1!!, !!2!!, =jl=]>
+puts ["asf", 1, 2, "jl"].accept(visitor) # <[=asf=, !!1!!, !!2!!, =jl=]>

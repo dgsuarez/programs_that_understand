@@ -128,5 +128,6 @@ class Person
   end
 end
 
-p Person.new("Diego", "111-212-213", 89).valid?
+p Person.new("Diego", "111-212-213", 89).valid? # true
+p Person.new("diego", "not a number", 150).valid? # false
 
