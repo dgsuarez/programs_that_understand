@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>db_adapters.cr</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" media="all" href="../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="db_adapters.html">
+                db_adapters.cr
+              </a>
+            
+              
+              <a class="source" href="state_machine.html">
+                state_machine.cr
+              </a>
+            
+              
+              <a class="source" href="value_object.html">
+                value_object.cr
+              </a>
+            
+              
+              <a class="source" href="visitor.html">
+                visitor.cr
+              </a>
+            
+              
+              <a class="source" href="../ruby/db_adapters.html">
+                db_adapters.rb
+              </a>
+            
+              
+              <a class="source" href="../ruby/log_decorator.html">
+                log_decorator.rb
+              </a>
+            
+              
+              <a class="source" href="../ruby/validation.html">
+                validation.rb
+              </a>
+            
+              
+              <a class="source" href="../ruby/value_object.html">
+                value_object.rb
+              </a>
+            
+              
+              <a class="source" href="../ruby/visitor.html">
+                visitor.rb
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>db_adapters.cr</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This is a classic metaprogramming use case: Avoid repeating yourself when you
+need to initialize a class based on it’s name</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">Adapters</span></span>
+  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MysqlAdapter</span>;</span> <span class="hljs-keyword">end</span>
+  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PostgresAdapter</span>;</span> <span class="hljs-keyword">end</span>
+  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SqlserverAdapter</span>;</span> <span class="hljs-keyword">end</span>
+  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OracleAdapter</span>;</span> <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>This macro expands to a case statement with branches like
+   when “MysqlAdapter” then Adapters::MysqlAdapter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">macro</span> <span class="hljs-title">class_from_name</span></span>(container_namespace, class_name)
+  <span class="hljs-keyword">case</span> <span class="hljs-template-variable">{{class_name}}</span>
+    <span class="hljs-template-variable">{% <span class="hljs-keyword">for</span> const in container_namespace.resolve.constants %}
+      <span class="hljs-keyword">when</span> <span class="hljs-string">"{{const}}"</span> <span class="hljs-keyword">then</span> {{container_namespace}}::{{const}}
+    {% <span class="hljs-keyword">end</span> %}
+    <span class="hljs-keyword">else</span> raise <span class="hljs-string">"No adapter found for <span class="hljs-subst">#{ <span class="hljs-template-variable">{{class_name}}</span> }</span>"</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">adapter</span></span>(name)
+  adapter_class_name = <span class="hljs-string">"<span class="hljs-subst">#{name.to_s.capitalize}</span>Adapter"</span>
+  class_from_name(Adapters, adapter_class_name)
+<span class="hljs-keyword">end</span>
+
+puts adapter(:oracle).new
+
+</span></pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
